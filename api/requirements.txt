@@ -1,0 +1,5 @@
+flask
+Flask
+mysql-connector
+redis
+pykafka

@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  # API image build
+  app:
+    container_name: api
+    build: ./api
+    # Enabling persistent volume
+    volumes:
+      - ./api:/usr/src/app
+    networks:
+      - backend
+    # Exposing port 8000 on the external network
+    ports:
+      - '8000:8000'
+    environment:
+      PORT: 8000
+      FLASK_DEBUG: 1
+  
+  # Go image build
+  go:
+    container_name: go
+    build: ./go
+    # Enabling persistent volume
+    volumes:
+      - ./go:/go/src/app
+    networks:
+      - backend
+    # Exposing port 8001 on the external network
+    ports:
+      - '8001:8001'
+    environment:
+      PORT: 8001
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+    networks:
+      - backend
+    volumes:
+      - my-db:/var/lib/mysql
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    networks:
+      - backend
+  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    networks:
+      - backend
+  
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_NODE_ID: 1
+    volumes:
+      - kafka:/var/lib/kafka/logs
+    networks:
+      - backend
+
+volumes:
+  my-db:
+  kafka:
+
+networks:
+  backend:
