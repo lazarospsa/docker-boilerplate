@@ -6,6 +6,7 @@ Purpose of this challenge is to design a multi-layer product that requires the f
 - a **cache layer**, which is a Redis sever (B)
 - a **messaging layer**, which is an Apache Kafka server (C)
 - an **application layer**, which is a REST API web application (D)
+- an **web application layer**, which is a go web application (E)
 
 All of the components are implemented on separate Docker containers, and the whole infrastracture is deployed with docker-compose.
 
@@ -25,9 +26,12 @@ in the directory containing the docker-compose.yaml, five containers are startin
 centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services,
 required for the operation of an Apache Kafka server).
 
-For layers **A, B**, and **C**, images from the Docker Hub are used with minimal required configuration. **As for layer D**, a **Flask API** is implemented
+For layers **A, B**, and **C**, images from the Docker Hub are used with minimal required configuration.
+**As for layer D**, a **Flask API** is implemented
 in Python, and a container is created from a Dockerfile, setting the required parameters and installing the needed modules stated in requirements.txt.
 All the API related files are located in **/api** folder.
+**As for layer E**, a **Golang web app** is implemented
+in Go, and a container is created from a Dockerfile, all the golang app files are located in **/go** folder.
 
 All containers exist in the same private network, with only one entry point to the external network, which is the web application.
 
